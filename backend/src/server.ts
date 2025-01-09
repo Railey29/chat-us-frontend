@@ -1,7 +1,7 @@
 import http from "http";
-import express from "express";
 import {Server, Socket} from "socket.io";
 
+const express = require("express");
 const app = express();
 
 const server = app.listen(5000, () => {

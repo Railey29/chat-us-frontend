@@ -6,10 +6,10 @@
     "dev": "concurrently \"npm run dev:next\" \"npm run dev:express\"",
     "dev:next": "next dev",
     "dev:express": "ts-node ./backend/src/server.ts",
-    "build": "next build",
+    "build": "next build && tsc -p tsconfig.server.json",
     "start": "concurrently \"npm run start:next\" \"npm run start:express\"",
     "start:next": "next start",
-    "start:express": "node ./backend/src/server.js",
+    "start:express": "node ./backend/dist/server.js",
     "lint": "next lint"
   },
   "dependencies": {
@@ -21,7 +21,7 @@
   },
   "devDependencies": {
     "@types/express": "^5.0.0",
-    "@types/node": "^20.17.12",
+    "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "@types/socket.io": "^3.0.1",
@@ -30,6 +30,6 @@
     "postcss": "^8",
     "tailwindcss": "^3.4.1",
     "ts-node": "^10.9.2",
-    "typescript": "^5.7.3"
+    "typescript": "^5"
   }
 }
