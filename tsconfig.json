@@ -7,8 +7,8 @@
     "strict": true,
     "noEmit": true,
     "esModuleInterop": true,
-    "module": "esnext",
-    "moduleResolution": "bundler",
+    "module": "commonjs", // Change from "esnext" to "commonjs"
+    "moduleResolution": "node", // Change to "node" for better resolution of Node modules
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "preserve",
@@ -17,6 +17,6 @@
       "@/*": ["./*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
+  "include": ["next-env.d.ts", "backend/src/**/*.ts"], // Add backend folder to include the server.ts file
   "exclude": ["node_modules"]
 }
