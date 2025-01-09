@@ -1,28 +1,27 @@
+import { Dispatch, SetStateAction } from "react";
+import { io } from "socket.io-client";
+
+const socket = io("http://localhost:5000");
+
+interface Message {
+  text: string;
+  isUserMessage: boolean;
+}
+
 const handleSubmit = (
   event: React.FormEvent,
   message: string,
-  setMessage: React.Dispatch<React.SetStateAction<string>>,
-  messageList: { text: string; isUserMessage: boolean }[],
-  setMessageList: React.Dispatch<
-    React.SetStateAction<{ text: string; isUserMessage: boolean }[]>
-  >
+  setMessage: Dispatch<SetStateAction<string>>
 ) => {
   event.preventDefault();
 
   if (message.trim() !== "") {
-    setMessageList((prevMessages) => [
-      ...prevMessages,
-      { text: `You: ${message}`, isUserMessage: true }, // User message
-    ]);
+    // Emit the message to the server
+    socket.emit("send a message", message);
 
-    setTimeout(() => {
-      setMessageList((prevMessages) => [
-        ...prevMessages,
-        { text: `other: `, isUserMessage: false }, // Other user's response
-      ]);
-    }, 1000);
+    // Clear the input after submission
+    setMessage("");
   }
-  setMessage("");
 };
 
 export default handleSubmit;

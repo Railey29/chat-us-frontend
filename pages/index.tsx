@@ -1,16 +1,36 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import handleInput from "@/components/handleInput";
 import handleKeyDown from "@/components/handleKeyDown";
 import handleSubmit from "@/components/handleSubmit";
+import { io } from "socket.io-client";
+
+const socket = io("http://localhost:5000");
+
+interface Message {
+  text: string;
+  isUserMessage: boolean;
+}
 
 export default function Home() {
   const [message, setMessage] = useState("");
-  const [messageList, setMessageList] = useState<
-    {
-      text: string;
-      isUserMessage: boolean;
-    }[]
-  >([]);
+  const [messageList, setMessageList] = useState<Message[]>([]);
+
+  useEffect(() => {
+    socket.on("received message", (msg: string) => {
+      // Only add the message if it's not from the current user
+      setMessageList((prevMessages) => [
+        ...prevMessages,
+        {
+          text: `users: ${msg}`,
+          isUserMessage: false,
+        },
+      ]);
+    });
+
+    return () => {
+      socket.off("received message");
+    };
+  }, []);
 
   return (
     <>
@@ -43,7 +63,7 @@ export default function Home() {
         <div className="fixed left-1/4 bottom-10 w-1/2">
           <form
             onSubmit={(e) => {
-              handleSubmit(e, message, setMessage, messageList, setMessageList);
+              handleSubmit(e, message, setMessage);
             }}
           >
             <textarea
