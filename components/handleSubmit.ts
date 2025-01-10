@@ -1,7 +1,7 @@
-import { Dispatch, SetStateAction } from "react";
-import { io } from "socket.io-client";
+import {Dispatch, SetStateAction} from "react";
+import {io} from "socket.io-client";
 
-const socket = io("http://localhost:5000");
+const socket = io("https://chat-us-server.onrender.com/");
 
 interface Message {
   text: string;
@@ -17,7 +17,7 @@ const handleSubmit = (
 
   if (message.trim() !== "") {
     // Emit the message to the server
-    socket.emit("send a message", message);
+    socket.emit("message", message);
 
     // Clear the input after submission
     setMessage("");

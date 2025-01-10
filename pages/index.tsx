@@ -1,10 +1,11 @@
-import { useEffect, useState } from "react";
-import handleInput from "@/components/handleInput";
-import handleKeyDown from "@/components/handleKeyDown";
-import handleSubmit from "@/components/handleSubmit";
-import { io } from "socket.io-client";
+import {useEffect, useState} from "react";
+import handleInput from "../components/handleInput";
+import handleKeyDown from "../components/handleKeyDown";
+import handleSubmit from "../components/handleSubmit";
+import {io} from "socket.io-client";
+import React from "react";
 
-const socket = io("http://localhost:5000");
+const socket = io("https://chat-us-server.onrender.com/");
 
 interface Message {
   text: string;
@@ -16,8 +17,8 @@ export default function Home() {
   const [messageList, setMessageList] = useState<Message[]>([]);
 
   useEffect(() => {
-    socket.on("received message", (msg: string) => {
-      // Only add the message if it's not from the current user
+    // Listen for messages from the server
+    socket.on("message", (msg: string) => {
       setMessageList((prevMessages) => [
         ...prevMessages,
         {
@@ -28,7 +29,7 @@ export default function Home() {
     });
 
     return () => {
-      socket.off("received message");
+      socket.off("message"); // Cleanup listener when component unmounts
     };
   }, []);
 
@@ -39,11 +40,10 @@ export default function Home() {
           <h6 className="relative left-20 no-underline">WELCOME TO CHAT US!</h6>
           <hr className="relative top-5 border-2 border-black" />
           <br />
-          {/* Displaying messages */}
           <div
             className="messages overflow-y-auto w-full"
             style={{
-              maxHeight: "calc(70vh - 120px)", // Calculate height based on available screen space
+              maxHeight: "calc(70vh - 120px)",
             }}
           >
             {messageList.map((msg, index) => (
@@ -59,7 +59,6 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Input User */}
         <div className="fixed left-1/4 bottom-10 w-1/2">
           <form
             onSubmit={(e) => {
@@ -70,12 +69,12 @@ export default function Home() {
               value={message}
               onChange={(e) => {
                 setMessage(e.target.value);
-                handleInput(e); // call a function to handle the input
+                handleInput(e);
               }}
               className="w-full p-2 border border-gray-400 rounded resize-none"
               placeholder="Type a message..."
               rows={1}
-              style={{ maxHeight: "100px" }}
+              style={{maxHeight: "100px"}}
               onKeyDown={handleKeyDown}
             />
           </form>
